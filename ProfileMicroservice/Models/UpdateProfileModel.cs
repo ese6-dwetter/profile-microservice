@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProfileMicroservice.Models
 {
-    public class EditProfileModel
+    public class UpdateProfileModel
     {
         [Required] public string FirstName { get; set; }
         [Required] public string LastName { get; set; }

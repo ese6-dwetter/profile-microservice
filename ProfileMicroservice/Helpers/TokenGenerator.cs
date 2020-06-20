@@ -50,7 +50,7 @@ namespace ProfileMicroservice.Helpers
         public string GetJwtClaim(string token, string claimType)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
+            var securityToken = tokenHandler.ReadToken(token.Replace("Bearer ", string.Empty)) as JwtSecurityToken;
 
             return securityToken?.Claims.First(claim => claim.Type == claimType).Value;
         }
