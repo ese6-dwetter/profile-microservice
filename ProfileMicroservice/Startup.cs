@@ -87,12 +87,6 @@ namespace ProfileMicroservice
             });
 
             #endregion
-            
-            services.AddMessageConsumer(
-                messageQueueSection.Get<MessageQueueSettings>().Uri,
-                "ProfileMicroservice",
-                builder => builder.WithHandler<RegisterUserMessageHandler>("RegisterUser")
-            );
 
             #region Dependency Injection
 
@@ -105,6 +99,16 @@ namespace ProfileMicroservice
             services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<ITokenGenerator, TokenGenerator>();
 
+            #endregion
+            
+            #region Message Queue
+            
+            services.AddMessageConsumer(
+                messageQueueSection.Get<MessageQueueSettings>().Uri,
+                "ProfileMicroservice",
+                builder => builder.WithHandler<RegisterUserMessageHandler>("RegisterUser")
+            );
+            
             #endregion
 
             #region Authentication
