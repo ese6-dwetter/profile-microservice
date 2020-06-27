@@ -17,7 +17,7 @@ namespace ProfileMicroservice.MessageHandlers
 
         public Task HandleMessageAsync(string messageType, RegisterUserMessage message)
         {
-            Task.Run(() => { _service.CreateProfileAsync(Guid.Parse(message.UserId), message.Username); });
+            Task.Run(() => { _service.CreateProfileAsync(Guid.Parse(message.userId), message.username); });
             
             return Task.CompletedTask;
         }
