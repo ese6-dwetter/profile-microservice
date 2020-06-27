@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MessageBroker;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProfileMicroservice.Helpers;
+using ProfileMicroservice.MessageHandlers;
 using ProfileMicroservice.Repositories;
 using ProfileMicroservice.Services;
 using ProfileMicroservice.Settings;
@@ -37,8 +39,8 @@ namespace ProfileMicroservice
             #region Settings
 
             // Configure strongly typed settings objects
-            var appSettingsSection = Configuration.GetSection(nameof(TokenSettings));
-            services.Configure<TokenSettings>(appSettingsSection);
+            var tokenSettingsSection = Configuration.GetSection(nameof(TokenSettings));
+            services.Configure<TokenSettings>(tokenSettingsSection);
 
             var databaseSettingsSection = Configuration.GetSection(nameof(DatabaseSettings));
             services.Configure<DatabaseSettings>(databaseSettingsSection);
@@ -85,6 +87,12 @@ namespace ProfileMicroservice
             });
 
             #endregion
+            
+            services.AddMessageConsumer(
+                messageQueueSection.Get<MessageQueueSettings>().Uri,
+                "ProfileMicroservice",
+                builder => builder.WithHandler<RegisterUserMessageHandler>("RegisterUser")
+            );
 
             #region Dependency Injection
 
@@ -102,7 +110,7 @@ namespace ProfileMicroservice
             #region Authentication
 
             // Configure JWT authentication
-            var appSettings = appSettingsSection.Get<TokenSettings>();
+            var tokenSettings = tokenSettingsSection.Get<TokenSettings>();
 
             services.AddAuthentication(options =>
                 {
@@ -117,9 +125,9 @@ namespace ProfileMicroservice
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
                     
-                    ValidIssuer = appSettings.Issuer,
-                    ValidAudience = appSettings.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.Secret))
+                    ValidIssuer = tokenSettings.Issuer,
+                    ValidAudience = tokenSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenSettings.Secret))
                 };
                 options.SaveToken = true;
             });
