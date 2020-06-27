@@ -106,6 +106,16 @@ namespace ProfileMicroservice
             services.AddTransient<ITokenGenerator, TokenGenerator>();
 
             #endregion
+            
+            #region Message Queue
+            
+            services.AddMessageConsumer(
+                messageQueueSection.Get<MessageQueueSettings>().Uri,
+                "ProfileMicroservice",
+                builder => builder.WithHandler<RegisterUserMessageHandler>("RegisterUser")
+            );
+            
+            #endregion
 
             #region Authentication
 
