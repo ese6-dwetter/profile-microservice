@@ -29,7 +29,7 @@ namespace ProfileMicroservice.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetProfileByIdAsync([FromQuery] Guid id)
+        public async Task<IActionResult> GetProfileByIdAsync([FromRoute] Guid id)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace ProfileMicroservice.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> FollowProfileByIdAsync([FromQuery] Guid id, [FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> FollowProfileByIdAsync([FromRoute] Guid id, [FromHeader(Name = "Authorization")] string token)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace ProfileMicroservice.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UnfollowProfileByIdAsync([FromQuery] Guid id, [FromHeader(Name = "Authorization")] string token)
+        public async Task<IActionResult> UnfollowProfileByIdAsync([FromRoute] Guid id, [FromHeader(Name = "Authorization")] string token)
         {
             try
             {
